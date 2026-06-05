@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>North Bay Low Voltage — Marin · SF · Sonoma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:   #080A0F;
+    --steel1:  #0D1117;
+    --steel2:  #131B26;
+    --steel3:  #1C2B3A;
+    --steel4:  #243447;
+    --blue:    #1E3A5F;
+    --blue2:   #2A4F7C;
+    --yellow:  #F5C200;
+    --yellow2: #FFD740;
+    --yellow3: #FFF0A0;
+    --white:   #F0F4F8;
+    --muted:   rgba(240,244,248,0.90);
+    --muted2:  rgba(240,244,248,0.15);
+    --muted3:  rgba(240,244,248,0.06);
+    --border:  rgba(240,244,248,0.08);
+    --yborder: rgba(245,194,0,0.25);
+    --yglow:   rgba(245,194,0,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* SCANLINE TEXTURE */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,.03) 2px,
+      rgba(0,0,0,.03) 4px
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 3rem;
+    background: rgba(8,10,15,0.9);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    transition: padding .3s;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: baseline;
+    gap: .5rem;
+    text-decoration: none;
+  }
+  .nav-logo-main {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: .12em;
+    color: var(--white);
+  }
+  .nav-logo-accent {
+    font-family: 'Space Mono', monospace;
+    font-size: .97rem;
+    color: var(--yellow);
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 1.05rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--yellow); }
+  .nav-cta {
+    font-family: 'Space Mono', monospace;
+    font-size: .86rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--yellow);
+    border: none;
+    padding: .6rem 1.5rem;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .2s, transform .15s;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+  .nav-cta:hover { background: var(--yellow2); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 7rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+    gap: 4rem;
+  }
+
+  /* Circuit board SVG background */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    opacity: .035;
+    pointer-events: none;
+  }
+
+  /* Blue gradient orb */
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--blue2) 0%, transparent 70%);
+    top: -200px; right: -100px;
+    opacity: .25;
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--yellow) 0%, transparent 70%);
+    bottom: 0; left: 20%;
+    opacity: .04;
+    pointer-events: none;
+  }
+
+  .hero-left { position: relative; z-index: 2; }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    font-family: 'Space Mono', monospace;
+    font-size: .97rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 1.75rem;
+    opacity: 0;
+    animation: fadeUp .7s .1s forwards;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px; height: 1px;
+    background: var(--yellow);
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 7vw, 7rem);
+    letter-spacing: .04em;
+    line-height: .95;
+    color: var(--white);
+    margin-bottom: 1.75rem;
+    opacity: 0;
+    animation: fadeUp .7s .25s forwards;
+  }
+  .hero-title .accent { color: var(--yellow); }
+  .hero-title .outline {
+    -webkit-text-stroke: 1.5px var(--white);
+    color: transparent;
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 440px;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp .7s .4s forwards;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp .7s .55s forwards;
+  }
+
+  .btn-primary {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.02rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--yellow);
+    border: none;
+    padding: .9rem 2rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all .2s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  }
+  .btn-primary:hover { background: var(--yellow2); transform: translateY(-2px); }
+
+  .btn-ghost {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.02rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    padding: .9rem 2rem;
+    transition: all .2s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  }
+  .btn-ghost:hover { color: var(--yellow); border-color: var(--yborder); }
+
+  .hero-right {
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    animation: fadeLeft .8s .4s forwards;
+  }
+
+  .hero-panel {
+    background: var(--steel2);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--yellow);
+    padding: 2rem;
+    position: relative;
+  }
+  .panel-label {
+    font-family: 'Space Mono', monospace;
+    font-size: .76rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .panel-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--yborder);
+  }
+  .service-pills {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+    margin-bottom: 1.75rem;
+  }
+  .pill {
+    font-size: .93rem;
+    padding: .45rem 1rem;
+    background: var(--muted3);
+    border: 1px solid var(--border);
+    color: var(--white);
+    letter-spacing: .04em;
+    transition: all .2s;
+  }
+  .pill.active {
+    background: var(--yglow);
+    border-color: var(--yborder);
+    color: var(--white);
+  }
+  .locations-list {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1.25rem;
+  }
+  .location-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: .97rem;
+    color: var(--muted);
+  }
+  .location-name { font-weight: 500; color: var(--white); }
+  .location-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--yellow);
+    box-shadow: 0 0 8px var(--yellow);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeLeft { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:translateX(0)} }
+
+  /* ── SHARED SECTION ── */
+  section { padding: 6rem 3rem; }
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: .76rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+  }
+  .section-tag::before {
+    content: '';
+    width: 20px; height: 1px;
+    background: var(--yellow);
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    letter-spacing: .04em;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+  .section-title .accent { color: var(--yellow); }
+  .section-title .outline {
+    -webkit-text-stroke: 1.5px var(--white);
+    color: transparent;
+  }
+  .section-body {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+
+  /* ── SERVICES ── */
+  #services { background: var(--steel1); }
+  .services-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 4rem;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .service-card {
+    background: var(--steel1);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background .25s;
+    cursor: default;
+  }
+  .service-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--yellow);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .3s;
+  }
+  .service-card:hover { background: var(--steel2); }
+  .service-card:hover::after { transform: scaleX(1); }
+
+  .service-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+  .service-icon-wrap {
+    width: 40px; height: 40px;
+    border: 1px solid var(--yborder);
+    background: var(--yglow);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+  }
+  .service-num {
+    font-family: 'Space Mono', monospace;
+    font-size: .97rem;
+    color: rgba(245,194,0,.3);
+    letter-spacing: .1em;
+  }
+  .service-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: .06em;
+    color: var(--white);
+    margin-bottom: .5rem;
+  }
+  .service-desc {
+    font-size: .97rem;
+    line-height: 1.65;
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .job-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .job-item {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .45rem 0;
+    font-size: .96rem;
+    color: var(--muted);
+    border-bottom: 1px solid rgba(240,244,248,.04);
+  }
+  .job-item:last-child { border-bottom: none; }
+  .job-bullet {
+    width: 4px; height: 4px;
+    background: var(--yellow);
+    border-radius: 50%;
+    flex-shrink: 0;
+    opacity: .6;
+  }
+
+  /* ── PROCESS ── */
+  #process {
+    background: var(--black);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+  .steps { margin-top: 2.5rem; }
+  .step {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 1.25rem;
+    padding: 1.75rem 0;
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    transform: translateX(-15px);
+    transition: opacity .5s, transform .5s;
+  }
+  .step.visible { opacity: 1; transform: none; }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: .05em;
+    color: var(--yellow);
+    opacity: .3;
+    line-height: 1;
+  }
+  .step-title {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: .4rem;
+    letter-spacing: .02em;
+  }
+  .step-desc { font-size: .97rem; line-height: 1.7; color: var(--muted); }
+
+  .process-right { position: relative; }
+  .credential-card {
+    background: var(--steel2);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--yellow);
+    padding: 2.25rem;
+    margin-bottom: 1rem;
+  }
+  .cred-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .cred-row:first-child { padding-top: 0; }
+  .cred-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .cred-icon {
+    width: 36px; height: 36px;
+    flex-shrink: 0;
+    background: var(--yglow);
+    border: 1px solid var(--yborder);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.05rem;
+  }
+  .cred-title { font-size: 1.02rem; font-weight: 500; color: var(--white); margin-bottom: .25rem; }
+  .cred-desc { font-size: .93rem; color: var(--muted); line-height: 1.55; }
+
+  .assess-box {
+    background: var(--yglow);
+    border: 1px solid var(--yborder);
+    padding: 1.5rem 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .assess-left { font-size: 1rem; color: var(--muted); }
+  .assess-left strong { display: block; color: var(--white); font-size: 1.05rem; margin-bottom: .2rem; }
+  .assess-badge {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: .08em;
+    color: var(--yellow);
+    white-space: nowrap;
+  }
+
+  /* ── WHY ── */
+  #why { background: var(--steel1); }
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 3.5rem;
+  }
+  .why-card {
+    background: var(--steel1);
+    padding: 2rem 1.75rem;
+    transition: background .2s;
+    position: relative;
+  }
+  .why-card:hover { background: var(--steel2); }
+  .why-icon {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .why-title {
+    font-size: 1.02rem;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: .5rem;
+    letter-spacing: .02em;
+  }
+  .why-desc { font-size: .96rem; line-height: 1.65; color: var(--muted); }
+
+  /* ── AREAS ── */
+  #areas {
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
+  }
+  #areas::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 60px,
+      rgba(240,244,248,.015) 60px,
+      rgba(240,244,248,.015) 61px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 60px,
+      rgba(240,244,248,.015) 60px,
+      rgba(240,244,248,.015) 61px
+    );
+    pointer-events: none;
+  }
+  .areas-inner { position: relative; z-index: 2; }
+  .areas-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 4rem;
+  }
+  .areas-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .area-card {
+    background: var(--black);
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background .2s;
+  }
+  .area-card:hover { background: var(--steel1); }
+  .area-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--yellow);
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .area-card:hover::before { opacity: 1; }
+  .area-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: .06em;
+    color: var(--white);
+    margin-bottom: .75rem;
+  }
+  .area-desc {
+    font-size: .97rem;
+    line-height: 1.65;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .area-towns {
+    font-family: 'Space Mono', monospace;
+    font-size: .78rem;
+    color: rgba(245,194,0,.5);
+    letter-spacing: .06em;
+    line-height: 1.8;
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    background: var(--steel1);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+    position: relative;
+    overflow: hidden;
+  }
+  #contact::before {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, var(--yellow) 0%, transparent 70%);
+    opacity: .03;
+    top: -100px; right: -100px;
+    pointer-events: none;
+  }
+  .contact-left { position: relative; z-index: 2; }
+  .contact-promise {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+  }
+  .promise-item {
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    font-size: .97rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .promise-check {
+    color: var(--yellow);
+    font-size: .96rem;
+    margin-top: .1rem;
+    flex-shrink: 0;
+  }
+
+  .contact-form {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 1rem;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .field-label {
+    font-family: 'Space Mono', monospace;
+    font-size: .76rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: .4rem;
+    display: block;
+  }
+  .field-wrap { display: flex; flex-direction: column; }
+  input, select, textarea {
+    width: 100%;
+    padding: .8rem 1rem;
+    background: var(--muted3);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color .2s;
+    border-radius: 0;
+    appearance: none;
+  }
+  input::placeholder, textarea::placeholder { color: rgba(240,244,248,.2); }
+  input:focus, select:focus, textarea:focus { border-color: var(--yborder); }
+  select option { background: var(--steel2); color: var(--white); }
+  textarea { resize: vertical; min-height: 90px; }
+
+  .submit-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.02rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--yellow);
+    border: none;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    transition: all .2s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    margin-top: .5rem;
+  }
+  .submit-btn:hover { background: var(--yellow2); transform: translateY(-1px); }
+
+  /* ── TICKER ── */
+  .ticker {
+    background: var(--yellow);
+    overflow: hidden;
+    padding: .55rem 0;
+    white-space: nowrap;
+  }
+  .ticker-track {
+    display: inline-flex;
+    animation: ticker 30s linear infinite;
+    gap: 0;
+  }
+  .ticker-item {
+    font-family: 'Space Mono', monospace;
+    font-size: .97rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--black);
+    padding: 0 2rem;
+  }
+  .ticker-sep { color: rgba(0,0,0,.3); }
+  @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: .1em;
+    color: var(--white);
+  }
+  .footer-logo span { color: var(--yellow); }
+  .footer-mid {
+    font-family: 'Space Mono', monospace;
+    font-size: .76rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .footer-right { font-size: 1.05rem; color: rgba(240,244,248,.2); }
+
+  /* ── REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity .6s, transform .6s;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.25rem; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 6rem 1.25rem 3rem; gap: 2rem; }
+    .hero-right { display: none; }
+    section { padding: 4rem 1.25rem; }
+    .services-header, #process, #contact, .areas-header { grid-template-columns: 1fr; gap: 2rem; }
+    .areas-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <span class="nav-logo-main">North Bay Low Voltage</span>
+    <span class="nav-logo-accent">// NBLV</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#areas">Areas</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Get Estimate</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <!-- Circuit pattern bg -->
+  <svg class="hero-bg" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" fill="none">
+    <path stroke="#F5C200" stroke-width="1" d="M0 100 H200 V300 H400 V100 H600 V400 H800"/>
+    <path stroke="#F5C200" stroke-width="1" d="M0 300 H100 V500 H300 V200 H500 V400 H700 V600"/>
+    <path stroke="#F5C200" stroke-width="1" d="M100 0 V150 H300 V50 H500 V250 H700 V100"/>
+    <circle cx="200" cy="300" r="4" fill="#F5C200"/>
+    <circle cx="400" cy="100" r="4" fill="#F5C200"/>
+    <circle cx="100" cy="150" r="4" fill="#F5C200"/>
+    <circle cx="300" cy="50" r="4" fill="#F5C200"/>
+    <circle cx="500" cy="250" r="4" fill="#F5C200"/>
+    <circle cx="600" cy="400" r="4" fill="#F5C200"/>
+  </svg>
+
+  <div class="hero-left">
+    <div class="hero-eyebrow">Marin · San Francisco · Sonoma</div>
+    <h1 class="hero-title">
+      Smart<br>
+      <span class="accent">Home</span><br>
+      <span class="outline">Experts</span>
+    </h1>
+    <p class="hero-sub">Low voltage installation specialists serving the North Bay. Security, AV, networking, lighting control, motorized blinds and full smart home integration — done right.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Book Site Assessment</a>
+      <a href="#services" class="btn-ghost">Our Services</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-panel">
+      <div class="panel-label">Services we provide</div>
+      <div class="service-pills">
+        <span class="pill active">Security</span>
+        <span class="pill active">Audio / Visual</span>
+        <span class="pill active">Networking</span>
+        <span class="pill active">Lighting Control</span>
+        <span class="pill active">Motorized Blinds</span>
+        <span class="pill active">Smart Home</span>
+        <span class="pill active">Landscape Lighting</span>
+        <span class="pill active">Outdoor AV</span>
+      </div>
+      <div class="panel-label" style="margin-top:1.5rem;">Areas We Service</div>
+      <div class="locations-list">
+        <div class="location-item">
+          <span class="location-name">Marin County</span>
+          <span class="location-dot"></span>
+        </div>
+        <div class="location-item">
+          <span class="location-name">San Francisco</span>
+          <span class="location-dot" style="animation-delay:.5s"></span>
+        </div>
+        <div class="location-item">
+          <span class="location-name">Sonoma County</span>
+          <span class="location-dot" style="animation-delay:1s"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item">Security Systems <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Audio / Visual <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Network & WiFi <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Lighting Control <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Motorized Blinds <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Smart Home Integration <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Landscape Lighting <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Outdoor AV <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Marin County <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">San Francisco <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Sonoma County <span class="ticker-sep">◆</span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="ticker-item">Security Systems <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Audio / Visual <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Network & WiFi <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Lighting Control <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Motorized Blinds <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Smart Home Integration <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Landscape Lighting <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Outdoor AV <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Marin County <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">San Francisco <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Sonoma County <span class="ticker-sep">◆</span></span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-header reveal">
+    <div>
+      <div class="section-tag">What We Do</div>
+      <h2 class="section-title">Every system.<br><span class="accent">One call.</span></h2>
+    </div>
+    <p class="section-body">Client-supplied hardware, expert installation. You source the gear — we make everything work seamlessly together.</p>
+  </div>
+
+  <div class="services-grid reveal">
+
+    <div class="service-card">
+      <div class="service-header">
+        <div class="service-icon-wrap">🔒</div>
+        <div class="service-num">01</div>
+      </div>
+      <div class="service-name">Security</div>
+      <div class="service-desc">Full-property coverage — cameras, alarms, smart locks and intercoms with app-based remote monitoring.</div>
+      <div class="job-list">
+        <div class="job-item"><span class="job-bullet"></span>Video doorbell installation</div>
+        <div class="job-item"><span class="job-bullet"></span>Wireless camera system setup</div>
+        <div class="job-item"><span class="job-bullet"></span>Wired camera system (NVR)</div>
+        <div class="job-item"><span class="job-bullet"></span>Smart lock installation</div>
+        <div class="job-item"><span class="job-bullet"></span>Video intercom & gate systems</div>
+        <div class="job-item"><span class="job-bullet"></span>Alarm system setup & configuration</div>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-header">
+        <div class="service-icon-wrap">📶</div>
+        <div class="service-num">02</div>
+      </div>
+      <div class="service-name">Network & Wi-Fi</div>
+      <div class="service-desc">Whole-home coverage, structured wiring and Starlink setup. Eliminate dead zones for good.</div>
+      <div class="job-list">
+        <div class="job-item"><span class="job-bullet"></span>Router & single node setup</div>
+        <div class="job-item"><span class="job-bullet"></span>Whole-home mesh WiFi (Eero, Ubiquiti)</div>
+        <div class="job-item"><span class="job-bullet"></span>Cat6 structured wiring & drops</div>
+        <div class="job-item"><span class="job-bullet"></span>Network rack & patch panel build</div>
+        <div class="job-item"><span class="job-bullet"></span>Starlink setup & optimization</div>
+        <div class="job-item"><span class="job-bullet"></span>Network troubleshooting & optimization</div>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-header">
+        <div class="service-icon-wrap">🔊</div>
+        <div class="service-num">03</div>
+      </div>
+      <div class="service-name">Audio / Visual</div>
+      <div class="service-desc">Home theater, distributed audio and in-ceiling speaker installs for every room in the house.</div>
+      <div class="job-list">
+        <div class="job-item"><span class="job-bullet"></span>TV wall mount & cable concealment</div>
+        <div class="job-item"><span class="job-bullet"></span>Soundbar & basic AV setup</div>
+        <div class="job-item"><span class="job-bullet"></span>Single room home theater</div>
+        <div class="job-item"><span class="job-bullet"></span>Multi-room distributed audio</div>
+        <div class="job-item"><span class="job-bullet"></span>In-ceiling & in-wall speaker install</div>
+        <div class="job-item"><span class="job-bullet"></span>Projector setup & screen mounting</div>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-header">
+        <div class="service-icon-wrap">💡</div>
+        <div class="service-num">04</div>
+      </div>
+      <div class="service-name">Lighting Control</div>
+      <div class="service-desc">Lutron Caseta, RadioRA3 and smart dimmer installs. Control every light from any device, anywhere.</div>
+      <div class="job-list">
+        <div class="job-item"><span class="job-bullet"></span>Smart dimmer & switch replacement</div>
+        <div class="job-item"><span class="job-bullet"></span>Lutron Caseta room setup</div>
+        <div class="job-item"><span class="job-bullet"></span>Whole-home Lutron Caseta install</div>
+        <div class="job-item"><span class="job-bullet"></span>Lutron RadioRA3 premium system</div>
+        <div class="job-item"><span class="job-bullet"></span>Scene & automation programming</div>
+        <div class="job-item"><span class="job-bullet"></span>Lighting integration with smart home</div>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-header">
+        <div class="service-icon-wrap">🪟</div>
+        <div class="service-num">05</div>
+      </div>
+      <div class="service-name">Motorized Blinds</div>
+      <div class="service-desc">Battery or hardwired motorized shading — standalone app control or fully integrated with your smart home.</div>
+      <div class="job-list">
+        <div class="job-item"><span class="job-bullet"></span>Single motorized blind install</div>
+        <div class="job-item"><span class="job-bullet"></span>Multi-window blind setup</div>
+        <div class="job-item"><span class="job-bullet"></span>Full room motorized shading</div>
+        <div class="job-item"><span class="job-bullet"></span>Whole-home blind system</div>
+        <div class="job-item"><span class="job-bullet"></span>Hub & app configuration</div>
+        <div class="job-item"><span class="job-bullet"></span>Smart home integration & scheduling</div>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-header">
+        <div class="service-icon-wrap">🏠</div>
+        <div class="service-num">06</div>
+      </div>
+      <div class="service-name">Smart Home</div>
+      <div class="service-desc">Tie it all together — lights, blinds, security, AV and climate in one seamless, intuitive system.</div>
+      <div class="job-list">
+        <div class="job-item"><span class="job-bullet"></span>Smart thermostat install (Nest, Ecobee)</div>
+        <div class="job-item"><span class="job-bullet"></span>Hub setup & device onboarding</div>
+        <div class="job-item"><span class="job-bullet"></span>Full multi-system integration</div>
+        <div class="job-item"><span class="job-bullet"></span>Automation & scene programming</div>
+        <div class="job-item"><span class="job-bullet"></span>Leak & environmental sensor install</div>
+        <div class="job-item"><span class="job-bullet"></span>Voice assistant integration</div>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-header">
+        <div class="service-icon-wrap">🌿</div>
+        <div class="service-num">07</div>
+      </div>
+      <div class="service-name">Landscape Lighting</div>
+      <div class="service-desc">Low voltage path lights, uplighting and multi-zone outdoor systems. Transform your property after dark.</div>
+      <div class="job-list">
+        <div class="job-item"><span class="job-bullet"></span>Path light & uplight installation</div>
+        <div class="job-item"><span class="job-bullet"></span>Transformer setup & zone config</div>
+        <div class="job-item"><span class="job-bullet"></span>Multi-zone landscape system</div>
+        <div class="job-item"><span class="job-bullet"></span>Timer & app-based scheduling</div>
+        <div class="job-item"><span class="job-bullet"></span>Driveway & accent lighting</div>
+        <div class="job-item"><span class="job-bullet"></span>Smart home integration</div>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-header">
+        <div class="service-icon-wrap">📡</div>
+        <div class="service-num">08</div>
+      </div>
+      <div class="service-name">Outdoor AV</div>
+      <div class="service-desc">Weatherproof speakers, patio AV setups and multi-zone outdoor entertainment for Marin living.</div>
+      <div class="job-list">
+        <div class="job-item"><span class="job-bullet"></span>Outdoor weatherproof speaker install</div>
+        <div class="job-item"><span class="job-bullet"></span>Patio AV setup</div>
+        <div class="job-item"><span class="job-bullet"></span>Multi-zone outdoor audio</div>
+        <div class="job-item"><span class="job-bullet"></span>Outdoor TV & display mounting</div>
+        <div class="job-item"><span class="job-bullet"></span>Weatherproof wiring & conduit</div>
+        <div class="job-item"><span class="job-bullet"></span>Whole-property audio integration</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div>
+    <div class="section-tag reveal">How It Works</div>
+    <h2 class="section-title reveal">Simple process.<br><span class="accent">No surprises.</span></h2>
+    <p class="section-body reveal">We keep it straightforward. Site assessment, clear scope, expert install — done.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div>
+          <div class="step-title">Book a site assessment</div>
+          <div class="step-desc">We come to you, assess the scope and put together a clear quote. The assessment fee is credited toward your job when you proceed.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div>
+          <div class="step-title">You or we source the hardware</div>
+          <div class="step-desc">We can recommend and source the right gear, or you purchase direct — either way, no markup, no middleman. We install any brand.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div>
+          <div class="step-title">We install it perfectly</div>
+          <div class="step-desc">Clean, tidy install. Full app setup and configuration. We test everything before we leave and don't leave until it works.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div>
+          <div class="step-title">Ongoing support available</div>
+          <div class="step-desc">We're locally based and available for follow-up. Most North Bay clients have us back multiple times a year as they expand their setup.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="process-right reveal">
+    <div class="credential-card">
+      <div class="panel-label" style="font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--yellow);margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem;">Our credentials <span style="flex:1;height:1px;background:var(--yborder);display:block"></span></div>
+      <div class="cred-row">
+        <div class="cred-icon">📋</div>
+        <div>
+          <div class="cred-title">Licensed Handyman</div>
+          <div class="cred-desc">California licensed handyman contractor. Fully authorized for low voltage installation work across all service areas.</div>
+        </div>
+      </div>
+      <div class="cred-row">
+        <div class="cred-icon">🛡️</div>
+        <div>
+          <div class="cred-title">Fully Insured</div>
+          <div class="cred-desc">General liability insurance carried on every job. Your home is protected from start to finish.</div>
+        </div>
+      </div>
+      <div class="cred-row">
+        <div class="cred-icon">📍</div>
+        <div>
+          <div class="cred-title">Locally Owned & Operated</div>
+          <div class="cred-desc">Based in the North Bay. We live here, work here and our reputation depends on doing right by every client.</div>
+        </div>
+      </div>
+      <div class="cred-row">
+        <div class="cred-icon">🔧</div>
+        <div>
+          <div class="cred-title">Brand Agnostic</div>
+          <div class="cred-desc">Lutron, Sonos, Ubiquiti, Eero, Ring, Nest, Starlink — we work with whatever you own or want to buy.</div>
+        </div>
+      </div>
+    </div>
+    <div class="assess-box">
+      <div class="assess-left">
+        <strong>Site Assessment</strong>
+        We scope your project in person. Fee credited toward your job.
+      </div>
+      <div class="assess-badge">CREDITED TO JOB</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="section-tag reveal">Why North Bay Low Voltage</div>
+  <h2 class="section-title reveal">Built for<br><span class="accent">North Bay</span> <span class="outline">homes</span></h2>
+  <div class="why-grid reveal">
+    <div class="why-card">
+      <span class="why-icon">🏡</span>
+      <div class="why-title">Older Home Specialists</div>
+      <div class="why-desc">We know Marin's plaster walls, tight attics and hillside construction. We've seen it all and know how to work with it.</div>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">💰</span>
+      <div class="why-title">No Material Markup</div>
+      <div class="why-desc">You buy direct — no inflated equipment costs. You pay for our labor and expertise, nothing more.</div>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">📱</span>
+      <div class="why-title">Brand Agnostic</div>
+      <div class="why-desc">Sonos, Lutron, Ubiquiti, Eero, Ring, Nest — we install and integrate any hardware you choose.</div>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">🤝</span>
+      <div class="why-title">Locally Owned</div>
+      <div class="why-desc">We live and work in the North Bay. Referrals are our business — every job gets our full attention.</div>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">⚡</span>
+      <div class="why-title">One Contractor, Everything</div>
+      <div class="why-desc">Security, AV, WiFi, blinds, lighting, smart home — one contact, zero coordination headaches.</div>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">✅</span>
+      <div class="why-title">Clean Installs</div>
+      <div class="why-desc">We take pride in our work. Cables are hidden, mounts are level, apps are set up before we leave.</div>
+    </div>
+  </div>
+</section>
+
+<!-- AREAS -->
+<section id="areas">
+  <div class="areas-inner">
+    <div class="areas-header reveal">
+      <div>
+        <div class="section-tag">Service Areas</div>
+        <h2 class="section-title">Serving the<br><span class="accent">North Bay</span></h2>
+      </div>
+      <p class="section-body">We come to you across Marin, San Francisco and Sonoma. Same quality, same professionalism wherever you are in the region.</p>
+    </div>
+    <div class="areas-grid reveal">
+      <div class="area-card">
+        <div class="area-name">Marin</div>
+        <div class="area-desc">Our home base. Deep experience with Marin's hillside homes, older construction and estate properties.</div>
+        <div class="area-towns">Mill Valley · Tiburon · Belvedere<br>Sausalito · Ross · Kentfield<br>San Rafael · Novato · Fairfax</div>
+      </div>
+      <div class="area-card">
+        <div class="area-name">San Francisco</div>
+        <div class="area-desc">Victorian, Edwardian and modern homes across the city. We know SF's unique construction challenges.</div>
+        <div class="area-towns">Pacific Heights · Marina · Noe Valley<br>Cole Valley · SOMA · The Sunset<br>Presidio Heights · Russian Hill</div>
+      </div>
+      <div class="area-card">
+        <div class="area-name">Sonoma</div>
+        <div class="area-desc">Wine country estates and rural properties. Specialists in larger property installs and Starlink setups.</div>
+        <div class="area-towns">Sonoma · Petaluma · Santa Rosa<br>Sebastopol · Healdsburg · Glen Ellen<br>Napa · Calistoga · St. Helena</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-left">
+    <div class="section-tag reveal">Get Started</div>
+    <h2 class="section-title reveal">Book your<br><span class="accent">site assessment</span></h2>
+    <p class="section-body reveal" style="margin-bottom:2rem;">Tell us about your project. We'll schedule a visit, scope everything out and give you a clear quote — with the assessment credited toward your job when you proceed.</p>
+    <div class="contact-promise reveal">
+      <div class="promise-item"><span class="promise-check">▶</span>Assessment fee credited toward your job</div>
+      <div class="promise-item"><span class="promise-check">▶</span>Clear scope and quote before any work starts</div>
+      <div class="promise-item"><span class="promise-check">▶</span>You or we source the hardware — we handle installation</div>
+      <div class="promise-item"><span class="promise-check">▶</span>Full app setup and testing before we leave</div>
+      <div class="promise-item"><span class="promise-check">▶</span>Locally based — available for follow-up and support</div>
+    </div>
+  </div>
+
+  <form class="contact-form reveal" onsubmit="handleSubmit(event)">
+    <div class="form-row">
+      <div class="field-wrap">
+        <label class="field-label">First name</label>
+        <input type="text" placeholder="John" required>
+      </div>
+      <div class="field-wrap">
+        <label class="field-label">Last name</label>
+        <input type="text" placeholder="Smith" required>
+      </div>
+    </div>
+    <div class="field-wrap">
+      <label class="field-label">Email</label>
+      <input type="email" placeholder="john@email.com" required>
+    </div>
+    <div class="field-wrap">
+      <label class="field-label">Phone</label>
+      <input type="tel" placeholder="(415) 555-0100">
+    </div>
+    <div class="field-wrap">
+      <label class="field-label">City / Neighborhood</label>
+      <input type="text" placeholder="Mill Valley, Tiburon, SF...">
+    </div>
+    <div class="field-wrap">
+      <label class="field-label">Primary service needed</label>
+      <select>
+        <option value="" disabled selected>Select a service</option>
+        <option>Security cameras / alarms</option>
+        <option>Network & Wi-Fi</option>
+        <option>Audio / Visual</option>
+        <option>Lighting control</option>
+        <option>Motorized blinds</option>
+        <option>Smart home integration</option>
+        <option>Landscape lighting</option>
+        <option>Outdoor AV</option>
+        <option>Multiple services</option>
+        <option>Not sure yet</option>
+      </select>
+    </div>
+    <div class="field-wrap">
+      <label class="field-label">Tell us about your project</label>
+      <textarea placeholder="What are you looking to set up or improve? Any details about your home or existing systems are helpful."></textarea>
+    </div>
+    <button type="submit" class="submit-btn">Request Site Assessment →</button>
+    <p id="form-thanks" style="display:none;color:var(--yellow);font-family:'Space Mono',monospace;font-size:.8rem;letter-spacing:.1em;margin-top:.5rem;">✓ RECEIVED — WE'LL BE IN TOUCH WITHIN 24 HOURS.</p>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">North Bay <span>Low Voltage</span></div>
+  <div class="footer-mid">Licensed Handyman · Insured · Marin · SF · Sonoma</div>
+  <div class="footer-right">© 2026 North Bay Low Voltage</div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      e.target.querySelectorAll && e.target.querySelectorAll('.step').forEach((s,i)=>{
+        setTimeout(()=>s.classList.add('visible'), i*120);
+      });
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+document.querySelectorAll('.steps').forEach(el=>observer.observe(el));
+
+// Nav shrink on scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').style.padding =
+    window.scrollY > 50 ? '.8rem 3rem' : '1.25rem 3rem';
+});
+
+// Form
+function handleSubmit(e){
+  e.preventDefault();
+  e.target.querySelector('.submit-btn').style.display='none';
+  document.getElementById('form-thanks').style.display='block';
+}
+</script>
+</body>
+</html>
