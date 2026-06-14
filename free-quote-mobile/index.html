@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Smart Home Installation — Marin · SF · Sonoma | North Bay Low Voltage</title>
 <meta name="description" content="Expert low voltage installation across Marin, San Francisco and Sonoma. Security, AV, WiFi, lighting control, motorized blinds and smart home integration.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Space+Mono&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -484,9 +484,28 @@
 </div>
 
 <script>
+const FORM_ACTION = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSde5eOWwtwY_LJaSiqgi2TQgaUVnpfQ0004gGRdEqv9RIN8iw/formResponse';
+
 function handleSubmit(e) {
   e.preventDefault();
-  window.location.href = '/thank-you';
+  const name    = document.getElementById('f-name').value;
+  const phone   = document.getElementById('f-phone').value;
+  const service = document.getElementById('f-service').value;
+
+  const body = new URLSearchParams({
+    'entry.93547796':   name,
+    'entry.493474841':  phone,
+    'entry.1265674518': service
+  });
+
+  fetch(FORM_ACTION, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: body.toString()
+  }).finally(() => {
+    window.location.href = '/thank-you';
+  });
 }
 </script>
 </body>
